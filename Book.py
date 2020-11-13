@@ -1,7 +1,6 @@
 from ebaysdk.finding import Connection as finding
 from bs4 import BeautifulSoup
 
-
 ID_APP = 'TheKaize-ASINAler-PRD-12eb4905c-db637f64'
 
 class Book:
@@ -26,7 +25,6 @@ class Book:
 
             if price < self.max_price:
                 print('________')
-                print('cat: ' + cat)
                 print('title: ' + title)
                 print('price: ' + str(price))
                 print('url: ' + url)

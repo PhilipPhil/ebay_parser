@@ -7,12 +7,12 @@
   <title>Ebay Parcer</title>
   <meta name="description" content="Ebay Parcer">
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{{url_for('static', filename = 'styles.css')}}">
 
 </head>
 
 <header>
-  <img src='ebay_logo.png' />
+  <img src="{{url_for('static', filename = 'ebay_logo.png')}}"/>
 </header>
 
 <body>
@@ -22,6 +22,6 @@
     <p>Drag your excel here or click in this area.</p>
     <button type="submit">Upload</button>
   </form>
-  <script src="scripts.js"></script>
+  <script src="{{url_for('static', filename = 'scripts.js')}}"></script>
 </body>
 </html>

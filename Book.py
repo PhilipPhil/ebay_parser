@@ -22,6 +22,7 @@ class Book:
             title = item.title.string.lower()
             price = int(round(float(item.currentprice.string)))
             url = item.viewitemurl.string.lower()
+            print(item)
 
             if price < self.max_price:
                 print('________')

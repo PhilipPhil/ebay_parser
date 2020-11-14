@@ -1,5 +1,3 @@
-$(document).ready(function(){
-    $('form input').change(function () {
-      $('form p').text(this.files.length + " file(s) selected");
-    });
-  });
+document.getElementById('files').addEventListener('change', (e) => {
+  document.getElementById('form-text').innerText = document.getElementById('files').files.length + " file(s) selected";
+})

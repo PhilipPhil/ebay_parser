@@ -15,6 +15,7 @@ class Search(db.Model):
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
+        files = request.form['files']
 
         searches = pd.read_excel('./sample.xlsx')
         searches = pd.DataFrame(searches, columns= ['book_id','max_price'])

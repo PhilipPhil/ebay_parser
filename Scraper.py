@@ -22,9 +22,9 @@ class Scraper:
             price = int(round(float(item.currentprice.string)))
             title = item.title.string.lower()
             url = item.viewitemurl.string.lower()
-
+            book_xml = item
             if price < max_price:
-                book = Book(book_id, max_price, price, title, url)
+                book = Book(book_id, max_price, price, title, url, book_xml)
                 books.append(book)
         return books
 
@@ -47,6 +47,7 @@ class Scraper:
             print('max_price: ' + str(book.max_price))
             print('price: ' + str(book.price))
             print('url: ' + book.url)
+            print('book_xml: ' + str(book.book_xml))
 
     def reset_urls_sent(self):
         self.urls_sent = set()

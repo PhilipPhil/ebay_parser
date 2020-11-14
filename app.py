@@ -3,11 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import threading
 import Search
-from Scraper import Scraper
+# from Scraper import Scraper
 
-scraper = Scraper()
+# scraper = Scraper()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Books.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
 

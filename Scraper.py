@@ -2,6 +2,7 @@ from ebaysdk.finding import Connection as finding
 from bs4 import BeautifulSoup
 from Book import Book
 import time
+from app import Search
 
 class Scraper:
 
@@ -28,13 +29,14 @@ class Scraper:
                 books.append(book)
         return books
 
-    def run(self):
-        while True:
-            # for row in db:
-            books = self.check_books(book_id, max_price)
-            # for book in books:
-            this.send_email(book)
-            time.sleep(2)
+    def run(self): 
+        while True: 
+            rows = Search.Search.query.all() 
+            for row in rows: 
+                books = self.check_books(row.book_id, row.max_price) 
+                for book in books: 
+                    self.send_email(book) 
+                # time.sleep(2)
 
 
     def send_email(self, book):

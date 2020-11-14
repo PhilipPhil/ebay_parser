@@ -10,10 +10,4 @@ class Search(db.Model):
     book_id = db.Column(db.String(), primary_key=True)
     content = db.Column(db.Integer, nullable=False)
 
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-if __name__ == "__main__":
-    app.run(debug=True)
+db.create_all()

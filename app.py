@@ -1,9 +1,9 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
-import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
+import pandas as pd
+import threading
 import Search
 from Scraper import Scraper
-import threading
 
 scraper = Scraper()
 app = Flask(__name__)

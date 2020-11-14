@@ -9,11 +9,10 @@ db = SQLAlchemy(app)
 class Search(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.String(), nullable=False)
-    content = db.Column(db.Integer, nullable=False)
+    max_price = db.Column(db.Integer, nullable=False)
 
-new_search = Search(book_id = '1449690777', content = 100)
+new_search = Search(book_id = '1449690777', max_price = 100)
 print(new_search)
-db.session.add(new_search)
 db.session.add(new_search)
 db.session.commit()
 

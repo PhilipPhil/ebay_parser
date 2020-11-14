@@ -1,10 +1,11 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
-import threading
-import run
 import Search
+from Scraper import Scraper
+import threading
 
+scraper = Scraper()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Books.db'
 db = SQLAlchemy(app)
@@ -23,7 +24,7 @@ def index():
 					new_search = Search.Search(book_id=row['book_id'], max_price=row['max_price'])
 					db.session.add(new_search)
 			db.session.commit()
-
+            # scraper.reset_urls_sent()
 			return '<h1 style="text-align:center">Upload successful</h1>'
 		except:
 			return '<h1 style="text-align:center">There was an issue adding your files.</h1>'
@@ -33,6 +34,6 @@ def index():
 
 
 if __name__ == "__main__":
-	# scraper_thread = threading.Thread(target=run.execute_scraper)
+	# scraper_thread = threading.Thread(target=scraper.run())
 	# scraper_thread.start()
 	app.run(debug=True)

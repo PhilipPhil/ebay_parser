@@ -1,7 +1,6 @@
 from Scraper import Scraper
 import time
 
-
 scraper = Scraper()
 books = scraper.check_books('1305110706', 30)
 for book in books:

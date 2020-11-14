@@ -28,7 +28,7 @@ class Scraper:
                 books.append(book)
         return books
 
-    def execute_scraper(self):
+    def run(self):
         while True:
             # for row in db:
             books = self.check_books(book_id, max_price)

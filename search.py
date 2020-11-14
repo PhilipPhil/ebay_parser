@@ -1,4 +1,5 @@
 from Book import Book
-
-book = Book('1449690777',39)
-book.search()
+from Email import Email
+email = Email()
+Book(email, '1449690777',39)
+email.send()

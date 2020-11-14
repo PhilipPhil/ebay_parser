@@ -7,7 +7,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Books.db'
 db = SQLAlchemy(app)
 
 class Search(db.Model):
-    book_id = db.Column(db.String(), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.String(), nullable=False)
     content = db.Column(db.Integer, nullable=False)
 
-db.create_all()
+new_search = Search(book_id = '1449690777', content = 100)
+print(new_search)
+db.session.add(new_search)
+db.session.add(new_search)
+db.session.commit()
+
+print(Search.query.all())
+
+# db.create_all()

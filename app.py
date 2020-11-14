@@ -1,6 +1,5 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 import pandas as pd
 
 app = Flask(__name__)
@@ -19,14 +18,14 @@ def index():
 
         searches = pd.read_excel('./sample.xlsx')
         searches = pd.DataFrame(searches, columns= ['book_id','max_price'])
-
         new_search = Search(book_id = '1449690777', content = 100)
+
         try:
             db.session.add(new_search)
             db.session.commit()
-            return 'File has been uploaded'
+            return '<h1 style="text-align:center">Upload successful</h1>'
         except:
-            return 'There was an issue adding your task'
+            return '<h1 style="text-align:center">There was an issue adding your file'</h1>'
 
     else:
         return render_template('index.html')

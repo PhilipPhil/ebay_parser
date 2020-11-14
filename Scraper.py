@@ -12,6 +12,7 @@ class Scraper:
         self.urls_sent = set()
 
     def check_books(self, book_id, max_price):
+        time.sleep(18)
         api = finding(appid=self.ID_APP, config_file=None)
         api_request = { 'keywords': book_id }
         response = api.execute('findItemsByKeywords', api_request)
@@ -35,8 +36,7 @@ class Scraper:
             for row in rows: 
                 books = self.check_books(row.book_id, row.max_price) 
                 for book in books: 
-                    self.send_email(book) 
-                # time.sleep(2)
+                    self.send_email(book)
 
 
     def send_email(self, book):

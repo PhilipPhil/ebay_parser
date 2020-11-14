@@ -51,15 +51,12 @@ form button:hover{
 form button:active{
   border:0;
 }
-
-
 .center {
 
   background-repeat: no-repeat;
   width: 100%;
   height: auto;
 }
-
 body {
   display: -ms-flexbox;
   display: -webkit-box;
@@ -70,4 +67,8 @@ body {
   background-position: top center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+}
+#files:hover,
+#submit-button:hover {
+  cursor: pointer;
 }

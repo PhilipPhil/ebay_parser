@@ -1,8 +1,5 @@
 import app
-
-
 db = app.db
-
 
 class Search(db.Model):
     id = db.Column(db.Integer, primary_key=True)

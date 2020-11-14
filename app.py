@@ -23,7 +23,7 @@ def index():
 					new_search = Search.Search(book_id=row['book_id'], max_price=row['max_price'])
 					db.session.add(new_search)
 			db.session.commit()
-			# print(Search.Search.query.all())
+
 			return '<h1 style="text-align:center">Upload successful</h1>'
 		except:
 			return '<h1 style="text-align:center">There was an issue adding your files.</h1>'
@@ -33,6 +33,6 @@ def index():
 
 
 if __name__ == "__main__":
-	thread1 = threading.Thread(target=run.execute_scraper)
-	thread1.start()
+	# scraper_thread = threading.Thread(target=run.execute_scraper)
+	# scraper_thread.start()
 	app.run(debug=True)

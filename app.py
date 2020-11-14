@@ -25,7 +25,7 @@ def index():
             db.session.commit()
             return '<h1 style="text-align:center">Upload successful</h1>'
         except:
-            return '<h1 style="text-align:center">There was an issue adding your file'</h1>'
+            return '<h1 style="text-align:center">There was an issue adding your file</h1>'
 
     else:
         return render_template('index.html')

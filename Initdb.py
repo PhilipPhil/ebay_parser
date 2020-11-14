@@ -11,11 +11,11 @@ class Search(db.Model):
     book_id = db.Column(db.String(), nullable=False)
     max_price = db.Column(db.Integer, nullable=False)
 
-new_search = Search(book_id = '1449690777', max_price = 100)
-print(new_search)
-db.session.add(new_search)
-db.session.commit()
+# new_search = Search(book_id = '1449690777', max_price = 100)
+# print(new_search)
+# db.session.add(new_search)
+# db.session.commit()
 
-print(Search.query.all())
+# print(Search.query.all())
 
-# db.create_all()
+db.create_all()

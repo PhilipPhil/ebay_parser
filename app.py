@@ -4,7 +4,7 @@ from datetime import datetime
 from Book import Book
 
 app = Flask(__name__)
-app.config['Books'] = 'sqlite://Books.db'
+app.config['SQLALCHEMY_DATABASE_URL'] = 'sqlite:///Books.db'
 
 db = SQLAlchemy(app)
 

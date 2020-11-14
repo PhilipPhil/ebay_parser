@@ -2,7 +2,7 @@ from ebaysdk.finding import Connection as finding
 from bs4 import BeautifulSoup
 from Book import Book
 
-class Email:
+class Scraper:
 
     ID_APP = 'TheKaize-ASINAler-PRD-12eb4905c-db637f64'
 
@@ -31,7 +31,7 @@ class Email:
     def email_get_books(self):
         return self.books
 
-    def send(self):
+    def send_email(self):
         print("Sending Email")
         for book in self.books:
             print('________')

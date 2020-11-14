@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import pandas as pd
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Books.db'
@@ -15,6 +16,10 @@ class Search(db.Model):
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
+
+        searches = pd.read_excel('./sample.xlsx')
+        searches = pd.DataFrame(searches, columns= ['book_id','max_price'])
+
         new_search = Search(book_id = '1449690777', content = 100)
         try:
             db.session.add(new_search)

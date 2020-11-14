@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import threading
 import Search
-# from Scraper import Scraper
+from Scraper import Scraper
 
-# scraper = Scraper()
+scraper = Scraper()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
@@ -20,7 +20,7 @@ def index():
 			for f in files:
 				searches = pd.read_excel(f)
 				searches = pd.DataFrame(searches, columns=['book_id', 'max_price'])
-				for search, row in searches.T.iteritems():
+				for _, row in searches.T.iteritems():
 					new_search = Search.Search(book_id=row['book_id'], max_price=row['max_price'])
 					db.session.add(new_search)
 			db.session.commit()

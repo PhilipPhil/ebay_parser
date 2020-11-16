@@ -36,4 +36,4 @@ def index():
 if __name__ == "__main__":
     scraper_thread = threading.Thread(target=scraper.run)
     scraper_thread.start()
-    app.run(debug=True)
+    app.run(debug=False)

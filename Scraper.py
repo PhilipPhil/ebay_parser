@@ -10,6 +10,9 @@ from email.mime.text import MIMEText
 
 class Scraper:
 
+    from_mail = 'ebayalert123@gmail.com'
+    password_mail = 'sfoxktdmsbauccqa'
+    to_mail = 'dealalchemist@gmail.com'
     ID_APP = 'TheKaize-ASINAler-PRD-12eb4905c-db637f64'
 
     def __init__(self):
@@ -44,79 +47,63 @@ class Scraper:
                     self.send_email(book)
 
     def send_email(self, book):
-        # print("Sending Email")
-        # if book.url not in self.urls_sent:
-        #     self.urls_sent.add(book.url)
-        #     print('________')
-        #     print('book_id: ' + book.book_id)
-        #     print('title: ' + book.title)
-        #     print('max_price: ' + str(book.max_price))
-        #     print('price: ' + str(book.price))
-        #     print('url: ' + book.url)
-        #     print('book_xml: ' + str(book.book_xml))
-        from_mail = 'ebayalert123@gmail.com'
-        password = 'sfoxktdmsbauccqa'
-        to_mail = 'dealalchemist@gmail.com'
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.ehlo()
         server.starttls()
-        server.ehlo()
-        server.login(from_mail, password)
+        server.login(self.from_mail, self.password_mail)
 
         msg = MIMEMultipart('mixed')
         msg['Subject'] = 'Book Alert'
-        msg['From'] = from_mail
-        msg['To'] = to_mail
-
+        msg['From'] = self.from_mail
+        msg['To'] = self.to_mail
         if book.url not in self.urls_sent:
-            self.urls_sent.add(book.url)
-            print('________')
-            print('book_id: ' + book.book_id)
-            print('title: ' + book.title)
-            print(book.book_xml.prettify())
-
-            html = """\
-            <html>
-            <head>
-                <style>
-                    table,
-                    th,
-                    td {
-                        padding: 10px;
-                        border: 1px solid black;
-                        border-collapse: collapse;
-                    }
-                </style>
-            </head>
-            <body>
-                <table>
-                    <tr>
-                        <th>Book ID</th>
-                        <th>Title</th>
-                        <th>Max Price</th>
-                        <th>Price</th>
-                        <th>URL</th>
-                    </tr>
-                    <tr>
-                        <th>"""+book.book_id+"""</th>\
-                        <th>"""+book.title+ """</th>\
-                        <th>"""+str(book.max_price)+"""</th>\
-                        <th>"""+str(book.price)+"""</th>\
-                        <th>"""+book.url+"""</th>\
-                    </tr>
-                </table>
-            </body>
-            </html>
-            """
+            self.urls_sent.add(book.url)           
+            html_mail = self.email_html(book)
             text_xml = book.book_xml.prettify()
 
-            msg.attach(MIMEText(html, 'html'))
+            msg.attach(MIMEText(html_mail, 'html'))
             msg.attach(MIMEText(text_xml, 'plain')) 
 
-            server.sendmail(from_mail, to_mail, msg.as_string())
-            print('email has been sent successfully')
+            server.sendmail(self.from_mail, self.to_mail, msg.as_string())
+            
+            print('url: ' + book.url)
         server.quit()
+
+    def email_html(self, book):
+        html_mail = """\
+        <html>
+        <head>
+            <style>
+                table,
+                th,
+                td {
+                    padding: 10px;
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+            </style>
+        </head>
+        <body>
+            <table>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Title</th>
+                    <th>Max Price</th>
+                    <th>Price</th>
+                    <th>URL</th>
+                </tr>
+                <tr>
+                    <th>"""+book.book_id+"""</th>\
+                    <th>"""+book.title+ """</th>\
+                    <th>"""+str(book.max_price)+"""</th>\
+                    <th>"""+str(book.price)+"""</th>\
+                    <th>"""+book.url+"""</th>\
+                </tr>
+            </table>
+        </body>
+        </html>
+        """
+        return html_mail
 
     def reset_urls_sent(self):
         self.urls_sent = set()

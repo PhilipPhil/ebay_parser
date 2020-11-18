@@ -12,7 +12,7 @@ class Scraper:
 
     from_mail = 'ebayalert123@gmail.com'
     password_mail = 'sfoxktdmsbauccqa'
-    to_mail = 'dealalchemist@gmail.com'
+    to_mail = 'sethbaker51@gmail.com'
     ID_APP = ['SethBake-ASINAler-PRD-47c01d8ca-e867093d','TheKaize-ASINAler-PRD-12eb4905c-db637f64']
 
     def __init__(self):

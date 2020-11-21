@@ -12,15 +12,24 @@ class Scraper:
 
     from_mail = 'ebayalert123@gmail.com'
     password_mail = 'sfoxktdmsbauccqa'
-    to_mail = 'dealalchemist@gmail.com'
-    ID_APP = 'TheKaize-ASINAler-PRD-12eb4905c-db637f64'
+    to_mail = 'sethbaker51@gmail.com'
+    ID_APP = ['SethBake-ASINAler-PRD-47c01d8ca-e867093d','TheKaize-ASINAler-PRD-12eb4905c-db637f64']
 
     def __init__(self):
         self.urls_sent = set()
+        self.ID_Index = 1
+
+    def get_ID_Index(self):
+        self.ID_Index+=1
+        if self.ID_Index > len(self.ID_APP):
+            self.ID_Index = 1
+        return self.ID_Index % len(self.ID_APP)
 
     def check_books(self, book_id, max_price):
-        api = finding(appid=self.ID_APP, config_file=None)
-        time.sleep(18)
+        index = self.get_ID_Index()
+        print(self.ID_APP[index])
+        api = finding(appid=self.ID_APP[index], config_file=None)
+        time.sleep(8.7)
         api_request = { 'keywords': book_id }
         response = api.execute('findItemsByKeywords', api_request)
         soup = BeautifulSoup(response.content,'lxml')

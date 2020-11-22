@@ -49,7 +49,6 @@ class Scraper:
             title = item.title.string.lower()
             url = item.viewitemurl.string.lower()
             book_xml = item
-
             book = Book(book_id, max_price, price, title, url, book_xml)
             books.append(book)
         return books
@@ -63,7 +62,6 @@ class Scraper:
                     self.send_email(book)
 
     def send_email(self, book):
-
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(self.from_mail, self.password_mail)
@@ -72,17 +70,16 @@ class Scraper:
         msg['Subject'] = 'Book Alert'
         msg['From'] = self.from_mail
         msg['To'] = self.to_mail
+
         if book.url not in self.urls_sent:
             self.urls_sent.add(book.url)           
             html_mail = self.email_html(book)
             text_xml = book.book_xml.prettify()
-
             msg.attach(MIMEText(html_mail, 'html'))
             msg.attach(MIMEText(text_xml, 'plain')) 
-
             server.sendmail(self.from_mail, self.to_mail, msg.as_string())
-            
             print('url: ' + book.url)
+
         server.quit()
 
     def email_html(self, book):

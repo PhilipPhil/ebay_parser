@@ -7,6 +7,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from IDAPP import ID_APP
+from BannedSellers import BannedSellers
 
 class Scraper:
 
@@ -36,8 +37,7 @@ class Scraper:
                        'itemFilter': [
                            {'name': 'MaxPrice', 'value': max_price, 'paramName': 'Currency', 'paramValue': 'USD'},
                            {'name': 'ExcludeSeller',
-                            'value': ['fortwaynegoodwill', 'lazilyround', 'benjkuzn_0', 'integritybooksales',
-                                      'selectdiscountshop', 'discountshelf']}
+                            'value': BannedSellers}
                        ]}
         response = api.execute('findItemsAdvanced', api_request)
         soup = BeautifulSoup(response.content,'lxml')

@@ -12,7 +12,8 @@ class Scraper:
 
     from_mail = 'ebayalert123@gmail.com'
     password_mail = 'sfoxktdmsbauccqa'
-    to_mail = 'sethbaker51@gmail.com'
+    # to_mail = 'sethbaker51@gmail.com'
+    to_mail = 'gracia9828@gmail.com'
     ID_APP = ['SethBake-ASINAler-PRD-47c01d8ca-e867093d','TheKaize-ASINAler-PRD-12eb4905c-db637f64']
 
     def __init__(self):
@@ -30,21 +31,26 @@ class Scraper:
         print(self.ID_APP[index])
         api = finding(appid=self.ID_APP[index], config_file=None)
         time.sleep(8.7)
-        api_request = { 'keywords': book_id }
-        response = api.execute('findItemsByKeywords', api_request)
+        api_request = {'keywords': book_id,
+                       'itemFilter': [
+                           {'name': 'MaxPrice', 'value': max_price, 'paramName': 'Currency', 'paramValue': 'USD'},
+                           {'name': 'ExcludeSeller',
+                            'value': ['fortwaynegoodwill', 'lazilyround', 'benjkuzn_0', 'integritybooksales',
+                                      'selectdiscountshop', 'discountshelf']}
+                       ]}
+        response = api.execute('findItemsAdvanced', api_request)
         soup = BeautifulSoup(response.content,'lxml')
         items = soup.find_all('item')
 
         books = []
         for item in items:
-            price = int(round(float(item.currentprice.string)))
+            price = float(item.currentprice.string)
             title = item.title.string.lower()
             url = item.viewitemurl.string.lower()
             book_xml = item
 
-            if price < max_price:
-                book = Book(book_id, max_price, price, title, url, book_xml)
-                books.append(book)
+            book = Book(book_id, max_price, price, title, url, book_xml)
+            books.append(book)
         return books
 
     def run(self):

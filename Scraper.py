@@ -6,7 +6,7 @@ from app import Search
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from IDAPP import ID_APP
 
 class Scraper:
 
@@ -14,11 +14,11 @@ class Scraper:
     password_mail = 'sfoxktdmsbauccqa'
     # to_mail = 'sethbaker51@gmail.com'
     to_mail = 'gracia9828@gmail.com'
-    ID_APP = ['SethBake-ASINAler-PRD-47c01d8ca-e867093d','TheKaize-ASINAler-PRD-12eb4905c-db637f64']
 
     def __init__(self):
         self.urls_sent = set()
         self.ID_Index = 1
+        self.ID_APP = ID_APP
         self.api_time_delay = max(0.3, 24*60*60/(5000*len(self.ID_APP)) + 0.05)
 
     def get_ID_Index(self):

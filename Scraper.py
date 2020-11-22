@@ -19,6 +19,7 @@ class Scraper:
     def __init__(self):
         self.urls_sent = set()
         self.ID_Index = 1
+        self.api_time_delay = max(0.3, 24*60*60/(5000*len(self.ID_APP)) + 0.05)
 
     def get_ID_Index(self):
         self.ID_Index+=1
@@ -30,7 +31,7 @@ class Scraper:
         index = self.get_ID_Index()
         print(self.ID_APP[index])
         api = finding(appid=self.ID_APP[index], config_file=None)
-        time.sleep(8.7)
+        time.sleep(self.api_time_delay)
         api_request = {'keywords': book_id,
                        'itemFilter': [
                            {'name': 'MaxPrice', 'value': max_price, 'paramName': 'Currency', 'paramValue': 'USD'},

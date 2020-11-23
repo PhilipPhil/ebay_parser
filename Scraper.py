@@ -46,10 +46,14 @@ class Scraper:
         books = []
         for item in items:
             price = float(item.currentprice.string)
+            if item.shippingservicecost is not None:
+                shipping_service_cost = float(item.shippingservicecost.string)
+            else:
+                shipping_service_cost = 'Unknown'
             title = item.title.string.lower()
             url = item.viewitemurl.string.lower()
             book_xml = item
-            book = Book(book_id, max_price, price, title, url, book_xml)
+            book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_xml)
             books.append(book)
         return books
 
@@ -103,6 +107,7 @@ class Scraper:
                     <th>Title</th>
                     <th>Max Price</th>
                     <th>Price</th>
+                    <th>Shipping Cost</th>
                     <th>URL</th>
                 </tr>
                 <tr>
@@ -110,6 +115,7 @@ class Scraper:
                     <th>"""+book.title+ """</th>\
                     <th>"""+str(book.max_price)+"""</th>\
                     <th>"""+str(book.price)+"""</th>\
+                    <th>"""+str(book.shipping_service_cost)+"""</th>\
                     <th>"""+book.url+"""</th>\
                 </tr>
             </table>

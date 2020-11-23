@@ -46,10 +46,7 @@ class Scraper:
         books = []
         for item in items:
             price = float(item.currentprice.string)
-            if item.shippingservicecost is not None:
-                shipping_service_cost = float(item.shippingservicecost.string)
-            else:
-                shipping_service_cost = 'Unknown'
+            shipping_service_cost = str(item.shippingservicecost) if item.shippingservicecost else 'Unknown'
             title = item.title.string.lower()
             url = item.viewitemurl.string.lower()
             book_xml = item

@@ -40,7 +40,8 @@ class Scraper:
         response = requests.get(url=complete_url, headers=headers)
 
         print(response.json())
-
+        books = []
+        ## fill in here for loop
         return books
 
     def run(self):

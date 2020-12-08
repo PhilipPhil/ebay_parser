@@ -1,6 +1,7 @@
 from ebaysdk.finding import Connection as finding
 from bs4 import BeautifulSoup
 from Book import Book
+from Token import Token
 import time
 from app import Search
 import smtplib
@@ -21,6 +22,7 @@ class Scraper:
         self.ID_Index = 1
         self.ID_APP = ID_APP
         self.api_time_delay = max(0.3, 24*60*60/(5000*len(self.ID_APP)) + 0.05)
+        self.Token = Token()
 
     def get_ID_Index(self):
         self.ID_Index+=1

@@ -53,9 +53,12 @@ def api_request(book_id, max_price, access_token):
 
 
 if __name__ == "__main__":
+	import time
+	s = time.time()
 	book_id = '0385265042'
 	max_price = '200'
 	api_request(book_id, max_price, get_token())
+	print(time.time()-s > 7200)
 
 
 

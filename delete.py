@@ -20,10 +20,9 @@ def api_request(book_id, max_price, access_token):
 
 if __name__ == "__main__":
     Token = Token()
-
     book_id = '0385265042'
     max_price = '200'
-    api_request(book_id, max_price, Token.get_token())
+    print(api_request(book_id, max_price, Token.get_token()))
 
 
 

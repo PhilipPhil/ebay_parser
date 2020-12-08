@@ -19,41 +19,28 @@ class Scraper:
 
     def __init__(self):
         self.urls_sent = set()
-        self.ID_Index = 1
-        self.ID_APP = ID_APP
-        self.api_time_delay = max(0.3, 24*60*60/(5000*len(self.ID_APP)) + 0.05)
         self.Token = Token()
-
-    def get_ID_Index(self):
-        self.ID_Index+=1
-        if self.ID_Index > len(self.ID_APP):
-            self.ID_Index = 1
-        return self.ID_Index % len(self.ID_APP)
+        self.banned_sellers = '|'.join(BannedSellers)
 
     def check_books(self, book_id, max_price):
-        index = self.get_ID_Index()
-        print(self.ID_APP[index])
-        api = finding(appid=self.ID_APP[index], config_file=None)
-        time.sleep(self.api_time_delay)
-        api_request = {'keywords': book_id,
-                       'itemFilter': [
-                           {'name': 'MaxPrice', 'value': max_price, 'paramName': 'Currency', 'paramValue': 'USD'},
-                           {'name': 'ExcludeSeller',
-                            'value': BannedSellers}
-                       ]}
-        response = api.execute('findItemsAdvanced', api_request)
-        soup = BeautifulSoup(response.content,'lxml')
-        items = soup.find_all('item')
+        # items = soup.find_all('item')
+        # books = []
+        # for item in items:
+        #     book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_xml)
+        #     books.append(book)
+        
+        base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'
+        filter_url = 'q=' + book_id + '&filter=price:[..' + max_price + '],priceCurrency:USD,excludeSellers:{' + self.banned_sellers + '}'
+        complete_url = base_url + filter_url
 
-        books = []
-        for item in items:
-            price = float(item.currentprice.string)
-            shipping_service_cost = str(item.shippingservicecost) if item.shippingservicecost else 'Unknown'
-            title = item.title.string.lower()
-            url = item.viewitemurl.string.lower()
-            book_xml = item
-            book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_xml)
-            books.append(book)
+        headers = {
+            'Authorization': 'Bearer ' + self.Token.get_token()
+        }
+
+        response = requests.get(url=complete_url, headers=headers)
+
+        print(response.json())
+
         return books
 
     def run(self):

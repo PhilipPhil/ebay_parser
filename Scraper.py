@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from Book import Book
 from Token import Token
 import time
+import requests
+import json
 from app import Search
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -28,19 +30,32 @@ class Scraper:
         # for item in items:
         #     book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_json)
         #     books.append(book)
-        
-        base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'
-        filter_url = 'q=' + book_id + '&filter=price:[..' + max_price + '],priceCurrency:USD,excludeSellers:{' + self.banned_sellers + '}'
-        complete_url = base_url + filter_url
+        url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} '.format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
+        # base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'
+        # filter_url = 'q=' + book_id + '&filter=price:[..' + max_price + '],priceCurrency:USD,excludeSellers:{' + self.banned_sellers + '}'
+        # complete_url = base_url + filter_url
+
 
         headers = {
             'Authorization': 'Bearer ' + self.Token.get_token()
         }
 
-        response = requests.get(url=complete_url, headers=headers)
+        response = requests.get(url=url, headers=headers)
+        response_json = response.json()
 
-        print(response.json())
+        print(response_json)
         books = []
+        if response_json['total'] > 0:
+            items = response_json['itemSummaries']
+            for item in items:
+                price = float(item['price']['value'])
+                # shipping_service_cost = float(item['shippingOptions']['shippingCost']['value']) if item['shippingOptions']['shippingCost'] is not None else 'Unknown'
+                shipping_service_cost = 'N/A'
+                title = item['title']
+                url = item['itemWebUrl']
+                book_json = item
+                book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_json)
+                books.append(book)
         ## fill in here for loop
         return books
 
@@ -65,9 +80,9 @@ class Scraper:
         if book.url not in self.urls_sent:
             self.urls_sent.add(book.url)           
             html_mail = self.email_html(book)
-            text_xml = book.book_xml.prettify()
+            text_json = json.dumps(book.book_json, indent=4)
             msg.attach(MIMEText(html_mail, 'html'))
-            msg.attach(MIMEText(text_xml, 'plain')) 
+            msg.attach(MIMEText(text_json, 'plain'))
             server.sendmail(self.from_mail, self.to_mail, msg.as_string())
             print('url: ' + book.url)
 

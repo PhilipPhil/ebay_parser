@@ -14,7 +14,6 @@ class Scraper:
         self.urls_sent = set()
         self.Token = Token()
         self.banned_sellers = '|'.join(BannedSellers)
-        self.count = 0
 
     def check_books(self, book_id, max_price):
         request_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} '.format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
@@ -26,8 +25,6 @@ class Scraper:
         response = requests.get(url=request_url, headers=headers)
         response_json = response.json()
         books = []
-        self.count+=1
-        print(self.count)
         if response_json['total'] > 0:
             items = response_json['itemSummaries']
             for item in items:

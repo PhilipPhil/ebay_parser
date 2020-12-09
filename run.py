@@ -36,20 +36,26 @@ def get_token():
 
 
 def api_request(book_id, max_price, access_token):
-	base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'
+	# base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'
 	banned_sellers = '|'.join(BannedSellers)
-	filter_url = 'q='+book_id+'&filter=price:[..'+max_price+'],priceCurrency:USD,excludeSellers:{'+banned_sellers+'}'
-	complete_url = base_url+filter_url
+	# filter_url = 'q='+book_id+'&filter=price:[..'+max_price+'],priceCurrency:USD,excludeSellers:{'+banned_sellers+'}'
+	# complete_url = base_url+filter_url
+	url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} '.format(book_id=book_id, max_price=max_price, banned_sellers=banned_sellers)
 
 	headers = {
 		'Authorization': 'Bearer '+access_token
 	}
 
-	response = requests.get(url=complete_url, headers=headers)
+	response = requests.get(url=url, headers=headers)
+	response_json = response.json()
+	items = response_json['itemSummaries']
+	item = items[0]
+	# print(items)
+	print(item['shippingOptions'])
 
-	print(response.json())
+
 	# pretty print
-	# print(json.dumps(response.json(), indent=4))
+	print(json.dumps(response.json(), indent=4))
 
 
 if __name__ == "__main__":
@@ -58,7 +64,7 @@ if __name__ == "__main__":
 	book_id = '0385265042'
 	max_price = '200'
 	api_request(book_id, max_price, get_token())
-	print(time.time()-s > 7200)
+
 
 
 

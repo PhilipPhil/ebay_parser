@@ -1,13 +1,13 @@
-import requests, base64, json
+import requests, base64
 import time
 
-class Token:
 
+class Token:
     app_settings = {
-            'client_id': 'GraciaGu-Scraper-PRD-cf788fdd4-893b9b52',
-            'client_secret': 'PRD-f788fdd4768d-dc56-41ae-8dab-7c96',
-            'ruName': 'Gracia_Gu-GraciaGu-Scrape-vawoghhy'}
-	
+        'client_id': 'GraciaGu-Scraper-PRD-cf788fdd4-893b9b52',
+        'client_secret': 'PRD-f788fdd4768d-dc56-41ae-8dab-7c96',
+        'ruName': 'Gracia_Gu-GraciaGu-Scrape-vawoghhy'}
+
     token_url = "https://api.ebay.com/identity/v1/oauth2/token"
 
     def __init__(self):
@@ -30,7 +30,6 @@ class Token:
 
         self.token = self.create_token()
 
-        
     def create_token(self):
         response = requests.post(self.token_url, headers=self.headers, data=self.body)
         response_json = response.json()

@@ -1,7 +1,7 @@
 token_settings = {
-    'client_id': 'TheKaize-ASINAler-PRD-12eb4905c-db637f64',
-    'client_secret': 'PRD-2eb4905c463a-9070-488a-bcae-e94a',
-    'ruName': 'The_Kaizen_Stor-TheKaize-ASINAl-tgzzgisq'
+    'client_id': 'GraciaGu-Scraper-PRD-cf788fdd4-893b9b52',
+    'client_secret': 'PRD-f788fdd4768d-dc56-41ae-8dab-7c96',
+    'ruName': 'Gracia_Gu-GraciaGu-Scrape-vawoghhy'
     }
 
 email_settings = {

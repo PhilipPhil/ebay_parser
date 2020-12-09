@@ -26,7 +26,7 @@ class Scraper:
         # items = soup.find_all('item')
         # books = []
         # for item in items:
-        #     book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_xml)
+        #     book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_json)
         #     books.append(book)
         
         base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'

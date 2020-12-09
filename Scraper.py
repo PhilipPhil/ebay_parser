@@ -22,21 +22,26 @@ class Scraper:
         headers = {
             'Authorization': 'Bearer ' + self.Token.get_token()
         }
-
-        response = requests.get(url=request_url, headers=headers)
-        response_json = response.json()
+        
         books = []
-        if response_json['total'] > 0:
-            items = response_json['itemSummaries']
-            for item in items:
-                price = float(item['price']['value'])
-                shipping_information = json.dumps(item['shippingOptions'], indent=4)
-                # shipping_information = 'N/A'
-                title = item['title']
-                book_url = item['itemWebUrl']
-                book_json = item
-                book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
-                books.append(book)
+
+        try:
+            response = requests.get(url=request_url, headers=headers)
+            response_json = response.json()
+            print("request_url: " + request_url)
+            if response_json['total'] > 0:
+                items = response_json['itemSummaries']
+                for item in items:
+                    price = float(item['price']['value'])
+                    shipping_information = json.dumps(item['shippingOptions'], indent=4)
+                    title = item['title']
+                    book_url = item['itemWebUrl']
+                    book_json = item
+                    book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
+                    books.append(book)
+        except e:
+            print(e)
+
         return books
 
     def run(self):
@@ -64,7 +69,7 @@ class Scraper:
             msg.attach(MIMEText(html_mail, 'html'))
             msg.attach(MIMEText(text_json, 'plain'))
             server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
-            print('Book URL: ' + book.url)
+            print('Emailed Book: ' + book.url)
 
         server.quit()
 

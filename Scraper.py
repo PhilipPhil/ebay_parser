@@ -6,14 +6,9 @@ from app import Search
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from BannedSellers import BannedSellers
+from Utilities import BannedSellers, email_settings
 
 class Scraper:
-
-    from_mail = 'ebayalert123@gmail.com'
-    password_mail = 'sfoxktdmsbauccqa'
-    # to_mail = 'sethbaker51@gmail.com'
-    to_mail = 'philipgarabandic@gmail.com'
 
     def __init__(self):
         self.urls_sent = set()
@@ -54,12 +49,12 @@ class Scraper:
     def send_email(self, book):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(self.from_mail, self.password_mail)
+        server.login(email_settings['from_mail'], email_settings['password_mail'])
 
         msg = MIMEMultipart('mixed')
         msg['Subject'] = 'Book Alert'
-        msg['From'] = self.from_mail
-        msg['To'] = self.to_mail
+        msg['From'] = email_settings['from_mail']
+        msg['To'] = email_settings['to_mail']
 
         if book.url not in self.urls_sent:
             self.urls_sent.add(book.url)           
@@ -67,7 +62,7 @@ class Scraper:
             text_json = json.dumps(book.book_json, indent=4)
             msg.attach(MIMEText(html_mail, 'html'))
             msg.attach(MIMEText(text_json, 'plain'))
-            server.sendmail(self.from_mail, self.to_mail, msg.as_string())
+            server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
             print('Book URL: ' + book.url)
 
         server.quit()

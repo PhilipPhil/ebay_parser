@@ -1,3 +1,15 @@
+token_settings = {
+    'client_id': 'GraciaGu-Scraper-PRD-cf788fdd4-893b9b52',
+    'client_secret': 'PRD-f788fdd4768d-dc56-41ae-8dab-7c96',
+    'ruName': 'Gracia_Gu-GraciaGu-Scrape-vawoghhy'
+    }
+
+email_settings = {
+    'from_mail' : 'ebayalert123@gmail.com',
+    'password_mail' : 'sfoxktdmsbauccqa',
+    'to_mail' : 'philipgarabandic@gmail.com'
+}
+
 BannedSellers = [
     'grabo-8177',
     'integritybooksales',

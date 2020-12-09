@@ -12,12 +12,6 @@
 
 </head>
 
-<header>
-  <a href="/sample.xlsx" download>
-    <img src="{{url_for('static', filename = 'ebay_logo.png')}}" /><img src="{{url_for('static', filename = 'excel.png')}}" />
-  </a>
-</header>
-
 <body>
   <form action="" method="POST" enctype="multipart/form-data">
     <input type="file" name="files" id="files" multiple required accept=".xlsx">

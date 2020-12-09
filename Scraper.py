@@ -29,12 +29,12 @@ class Scraper:
             items = response_json['itemSummaries']
             for item in items:
                 price = float(item['price']['value'])
-                # shipping_service_cost = float(item['shippingOptions']['shippingCost']['value']) if item['shippingOptions']['shippingCost'] is not None else 'Unknown'
-                shipping_service_cost = 'N/A'
+                # shipping_information = float(item['shippingOptions']['shippingCost']['value']) if item['shippingOptions']['shippingCost'] is not None else 'Unknown'
+                shipping_information = 'N/A'
                 title = item['title']
                 book_url = item['itemWebUrl']
                 book_json = item
-                book = Book(book_id, max_price, price, shipping_service_cost, title, book_url, book_json)
+                book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
                 books.append(book)
         return books
 
@@ -86,9 +86,9 @@ class Scraper:
                 <tr>
                     <th>Book ID</th>
                     <th>Title</th>
-                    <th>Max Price</th>
-                    <th>Price</th>
-                    <th>Shipping Cost</th>
+                    <th>Max Price (USD)</th>
+                    <th>Price (USD)</th>
+                    <th>Shipping Information</th>
                     <th>URL</th>
                 </tr>
                 <tr>
@@ -96,7 +96,7 @@ class Scraper:
                     <th>"""+book.title+ """</th>\
                     <th>"""+str(book.max_price)+"""</th>\
                     <th>"""+str(book.price)+"""</th>\
-                    <th>"""+str(book.shipping_service_cost)+"""</th>\
+                    <th>"""+str(book.shipping_information)+"""</th>\
                     <th>"""+book.url+"""</th>\
                 </tr>
             </table>

@@ -1,5 +1,5 @@
 import requests, base64, json
-from BannedSellers import BannedSellers
+from Utilities import BannedSellers
 
 
 def get_token():
@@ -51,7 +51,7 @@ def api_request(book_id, max_price, access_token):
 	items = response_json['itemSummaries']
 	item = items[0]
 	# print(items)
-	print(item['shippingOptions'])
+	print(item['shippingOptions'][0]['shippingCost']['value'])
 
 
 	# pretty print

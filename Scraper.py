@@ -1,23 +1,14 @@
-from ebaysdk.finding import Connection as finding
-from bs4 import BeautifulSoup
 from Book import Book
 from Token import Token
-import time
 import requests
 import json
 from app import Search
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from IDAPP import ID_APP
-from BannedSellers import BannedSellers
+from Utilities import BannedSellers, email_settings
 
 class Scraper:
-
-    from_mail = 'ebayalert123@gmail.com'
-    password_mail = 'sfoxktdmsbauccqa'
-    # to_mail = 'sethbaker51@gmail.com'
-    to_mail = 'gracia9828@gmail.com'
 
     def __init__(self):
         self.urls_sent = set()
@@ -25,25 +16,14 @@ class Scraper:
         self.banned_sellers = '|'.join(BannedSellers)
 
     def check_books(self, book_id, max_price):
-        # items = soup.find_all('item')
-        # books = []
-        # for item in items:
-        #     book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_json)
-        #     books.append(book)
-        url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} '.format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
-        # base_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?'
-        # filter_url = 'q=' + book_id + '&filter=price:[..' + max_price + '],priceCurrency:USD,excludeSellers:{' + self.banned_sellers + '}'
-        # complete_url = base_url + filter_url
-
+        request_url = 'https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} '.format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
 
         headers = {
             'Authorization': 'Bearer ' + self.Token.get_token()
         }
 
-        response = requests.get(url=url, headers=headers)
+        response = requests.get(url=request_url, headers=headers)
         response_json = response.json()
-
-        print(response_json)
         books = []
         if response_json['total'] > 0:
             items = response_json['itemSummaries']
@@ -52,11 +32,10 @@ class Scraper:
                 # shipping_service_cost = float(item['shippingOptions']['shippingCost']['value']) if item['shippingOptions']['shippingCost'] is not None else 'Unknown'
                 shipping_service_cost = 'N/A'
                 title = item['title']
-                url = item['itemWebUrl']
+                book_url = item['itemWebUrl']
                 book_json = item
-                book = Book(book_id, max_price, price, shipping_service_cost, title, url, book_json)
+                book = Book(book_id, max_price, price, shipping_service_cost, title, book_url, book_json)
                 books.append(book)
-        ## fill in here for loop
         return books
 
     def run(self):
@@ -70,12 +49,12 @@ class Scraper:
     def send_email(self, book):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(self.from_mail, self.password_mail)
+        server.login(email_settings['from_mail'], email_settings['password_mail'])
 
         msg = MIMEMultipart('mixed')
         msg['Subject'] = 'Book Alert'
-        msg['From'] = self.from_mail
-        msg['To'] = self.to_mail
+        msg['From'] = email_settings['from_mail']
+        msg['To'] = email_settings['to_mail']
 
         if book.url not in self.urls_sent:
             self.urls_sent.add(book.url)           
@@ -83,8 +62,8 @@ class Scraper:
             text_json = json.dumps(book.book_json, indent=4)
             msg.attach(MIMEText(html_mail, 'html'))
             msg.attach(MIMEText(text_json, 'plain'))
-            server.sendmail(self.from_mail, self.to_mail, msg.as_string())
-            print('url: ' + book.url)
+            server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
+            print('Book URL: ' + book.url)
 
         server.quit()
 

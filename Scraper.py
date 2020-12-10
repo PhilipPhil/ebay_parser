@@ -34,11 +34,14 @@ class Scraper:
                 items = response_json['itemSummaries']
                 for item in items:
                     try:
+                        book_json = item
                         price = float(item['price']['value'])
-                        shipping_information = json.dumps(item['shippingOptions'], indent=4)
                         title = item['title']
                         book_url = item['itemWebUrl']
-                        book_json = item
+                        try:
+                            shipping_information = json.dumps(item['shippingOptions'], indent=4)
+                        except:
+                            shipping_information = 'NOT FOUND'
                         book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
                         books.append(book)
                     except:

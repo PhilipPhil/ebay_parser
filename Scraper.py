@@ -18,7 +18,7 @@ class Scraper:
 
     def check_books(self, book_id, max_price):
         request_url = """https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],\
-        priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} """.format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
+        priceCurrency:USD,excludeSellers:{{ {banned_sellers} }}""".format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
 
         headers = {
             'Authorization': 'Bearer ' + self.Token.get_token()

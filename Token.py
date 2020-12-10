@@ -33,7 +33,7 @@ class Token:
         return access_token
 
     def get_token(self):
-        if time.time() - self.time_created > 7200:
+        if time.time() - self.time_created > 7140:
             self.time_created = time.time()
             self.token = self.create_token()
         return self.token

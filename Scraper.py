@@ -7,6 +7,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from Utilities import BannedSellers, email_settings
+import time
 
 class Scraper:
 
@@ -17,26 +18,39 @@ class Scraper:
 
     def check_books(self, book_id, max_price):
         request_url = """https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],\
-        priceCurrency:USD,excludeSellers:{{ {banned_sellers} }} """.format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
+        priceCurrency:USD,excludeSellers:{{ {banned_sellers} }}""".format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
 
         headers = {
             'Authorization': 'Bearer ' + self.Token.get_token()
         }
-
-        response = requests.get(url=request_url, headers=headers)
-        response_json = response.json()
+        
         books = []
-        if response_json['total'] > 0:
-            items = response_json['itemSummaries']
-            for item in items:
-                price = float(item['price']['value'])
-                shipping_information = json.dumps(item['shippingOptions'], indent=4)
-                # shipping_information = 'N/A'
-                title = item['title']
-                book_url = item['itemWebUrl']
-                book_json = item
-                book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
-                books.append(book)
+
+        try:
+            response = requests.get(url=request_url, headers=headers)
+            response_json = response.json()
+            print("request_url: " + request_url)
+            if response_json['total'] > 0:
+                items = response_json['itemSummaries']
+                for item in items:
+                    try:
+                        book_json = item
+                        price = float(item['price']['value'])
+                        title = item['title']
+                        book_url = item['itemWebUrl']
+                        try:
+                            shipping_information = json.dumps(item['shippingOptions'], indent=4)
+                        except:
+                            shipping_information = 'NOT FOUND'
+                        book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
+                        books.append(book)
+                    except:
+                        print('error with book: ' + str(item))
+        except:
+            print('Out of API calls: ' + str(time.time()))
+            print('Pausing 60 seconds')
+            time.sleep(60)
+
         return books
 
     def run(self):
@@ -48,25 +62,28 @@ class Scraper:
                     self.send_email(book)
 
     def send_email(self, book):
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(email_settings['from_mail'], email_settings['password_mail'])
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(email_settings['from_mail'], email_settings['password_mail'])
 
-        msg = MIMEMultipart('mixed')
-        msg['Subject'] = 'Book Alert'
-        msg['From'] = email_settings['from_mail']
-        msg['To'] = email_settings['to_mail']
+            msg = MIMEMultipart('mixed')
+            msg['Subject'] = 'Book Alert'
+            msg['From'] = email_settings['from_mail']
+            msg['To'] = email_settings['to_mail']
 
-        if book.url not in self.urls_sent:
-            self.urls_sent.add(book.url)           
-            html_mail = self.email_html(book)
-            text_json = json.dumps(book.book_json, indent=4)
-            msg.attach(MIMEText(html_mail, 'html'))
-            msg.attach(MIMEText(text_json, 'plain'))
-            server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
-            print('Book URL: ' + book.url)
+            if book.url not in self.urls_sent:         
+                html_mail = self.email_html(book)
+                text_json = json.dumps(book.book_json, indent=4)
+                msg.attach(MIMEText(html_mail, 'html'))
+                msg.attach(MIMEText(text_json, 'plain'))
+                server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
+                self.urls_sent.add(book.url)
+                print('Emailed Book: ' + book.url)
 
-        server.quit()
+            server.quit()
+        except:
+            print('Email Failed to send: ' + book.url)
 
     def email_html(self, book):
         html_mail = """
@@ -106,7 +123,3 @@ class Scraper:
         """.format(book_id=book.book_id, title=book.title, max_price=book.max_price, price=book.price,
                    shipping_information=book.shipping_information, url=book.url)
         return html_mail
-
-    def reset_urls_sent(self):
-        self.urls_sent = set()
-

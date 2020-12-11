@@ -21,7 +21,7 @@ form p{
   color: #ffffff;
   font-family: Arial;
 }
-form input{
+form #files{
   position: absolute;
   margin: 0;
   padding: 0;
@@ -29,6 +29,20 @@ form input{
   height: 100%;
   outline: none;
   opacity: 0;
+}
+form #pass{
+  margin-top: -10px;
+  margin-bottom: 20px;
+  margin-right: 0px;
+  margin-left: -4px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 6px;
+  width: 496px;
+  outline: none;
+  border: none;
 }
 form button{
   margin: 0;

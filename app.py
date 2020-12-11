@@ -31,7 +31,7 @@ def index():
             except:
                 return '<h1 style="text-align:center">There was an issue adding your files</h1>'
         else:
-            return '<h1 style="text-align:center">Incorrect Password</h1>'
+            return '<h1 style="text-align:center">Incorrect password</h1>'
 
     else:
         return render_template('index.html')

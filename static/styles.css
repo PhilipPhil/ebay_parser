@@ -30,7 +30,7 @@ form #files{
   outline: none;
   opacity: 0;
 }
-form #pass{
+form #password{
   margin-top: -10px;
   margin-bottom: 20px;
   margin-right: 0px;

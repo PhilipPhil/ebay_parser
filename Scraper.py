@@ -70,7 +70,7 @@ class Scraper:
             msg = MIMEMultipart('mixed')
             msg['Subject'] = 'Book Alert'
             msg['From'] = email_settings['from_mail']
-            msg['To'] = email_settings['to_mail']
+            msg['To'] = 'ebayalert123_subscriber'
 
             if book.url not in self.urls_sent:         
                 html_mail = self.email_html(book)

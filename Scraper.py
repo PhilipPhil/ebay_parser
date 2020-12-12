@@ -123,3 +123,6 @@ class Scraper:
         """.format(book_id=book.book_id, title=book.title, max_price=book.max_price, price=book.price,
                    shipping_information=book.shipping_information, url=book.url)
         return html_mail
+        
+    def reset_urls_sent(self):
+        self.urls_sent = set()

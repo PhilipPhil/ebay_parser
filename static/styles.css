@@ -12,6 +12,7 @@ form{
   width: 500px;
   height: 200px;
   border: 4px dashed #fff;
+  border-radius: 4px;
 }
 form p{
   width: 100%;
@@ -39,7 +40,7 @@ form #password{
   padding-right: 6px;
   padding-top: 4px;
   padding-bottom: 4px;
-  border-radius: 6px;
+  border-radius: 4px;
   width: 496px;
   outline: none;
   border: none;

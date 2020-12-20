@@ -2,15 +2,21 @@ from flask import Flask, render_template, url_for, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import threading
-import Search
-from Scraper import Scraper
 from Utilities import token_settings
 
-scraper = Scraper()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
+import Search
+from Scraper import Scraper
+
+scraper = Scraper()
+
+@app.before_first_request
+def thread_start():
+    scraper_thread = threading.Thread(target=scraper.run)
+    scraper_thread.start()
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -20,7 +26,7 @@ def index():
                 files = request.files.getlist('files')
                 db.session.query(Search.Search).delete()
                 for f in files:
-                    searches = pd.read_excel(f)
+                    searches = pd.read_excel(f, engine='openpyxl')
                     searches = pd.DataFrame(searches, columns=['book_id', 'max_price'])
                     for _, row in searches.T.iteritems():
                         new_search = Search.Search(book_id=row['book_id'], max_price=row['max_price'])
@@ -38,6 +44,4 @@ def index():
 
 
 if __name__ == "__main__":
-    scraper_thread = threading.Thread(target=scraper.run)
-    scraper_thread.start()
-    app.run(debug=False)
+    app.run()

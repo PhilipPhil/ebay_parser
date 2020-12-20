@@ -37,7 +37,7 @@ class Scraper:
                 for item in items:
                     try:
                         book_json = item
-                        price = float(item['price']['value'])
+                        price = item['price']
                         title = item['title']
                         book_url = item['itemWebUrl']
                         try:
@@ -107,7 +107,7 @@ class Scraper:
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Max Price (GBP)</th>
-                    <th>Price (GBP)</th>
+                    <th>Price</th>
                     <th>Shipping Information</th>
                     <th>URL</th>
                 </tr>

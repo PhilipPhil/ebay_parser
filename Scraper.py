@@ -1,13 +1,15 @@
-from Book import Book
-from Token import Token
-import requests
-import json
-from app import Search
-import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from Utilities import BannedSellers, email_settings
+import smtplib
 import time
+import requests
+import json
+
+from Utilities import BannedSellers, email_settings
+from Book import Book
+from Token import Token
+
+from app import Search
 
 class Scraper:
 

@@ -36,7 +36,7 @@ class Scraper:
                 items = response_json['itemSummaries']
                 for item in items:
                     try:
-                        book_json = item
+                        book_json = json.dumps(item, indent=4)
                         book_url = item['itemWebUrl']
                         title = item['title']
                         price = json.dumps(item['price'], indent=4)
@@ -76,9 +76,8 @@ class Scraper:
 
             if book.url not in self.urls_sent:         
                 html_mail = self.email_html(book)
-                text_json = json.dumps(book.book_json, indent=4)
                 msg.attach(MIMEText(html_mail, 'html'))
-                msg.attach(MIMEText(text_json, 'plain'))
+                msg.attach(MIMEText(book.book_json, 'plain'))
                 server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
                 self.urls_sent.add(book.url)
                 print('Emailed Book: ' + book.url)

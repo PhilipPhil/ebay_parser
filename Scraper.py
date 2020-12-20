@@ -37,9 +37,9 @@ class Scraper:
                 for item in items:
                     try:
                         book_json = item
-                        price = item['price']
-                        title = item['title']
                         book_url = item['itemWebUrl']
+                        title = item['title']
+                        price = json.dumps(item['price'], indent=4)
                         try:
                             shipping_information = json.dumps(item['shippingOptions'], indent=4)
                         except:

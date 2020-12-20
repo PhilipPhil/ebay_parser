@@ -20,7 +20,7 @@ class Scraper:
 
     def check_books(self, book_id, max_price):
         request_url = """https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],\
-        priceCurrency:USD,excludeSellers:{{ {banned_sellers} }}""".format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
+        priceCurrency:GBP,itemLocationCountry:GB,excludeSellers:{{ {banned_sellers} }}""".format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
 
         headers = {
             'Authorization': 'Bearer ' + self.Token.get_token()
@@ -36,10 +36,10 @@ class Scraper:
                 items = response_json['itemSummaries']
                 for item in items:
                     try:
-                        book_json = item
-                        price = float(item['price']['value'])
-                        title = item['title']
+                        book_json = json.dumps(item, indent=4)
                         book_url = item['itemWebUrl']
+                        title = item['title']
+                        price = json.dumps(item['price'], indent=4)
                         try:
                             shipping_information = json.dumps(item['shippingOptions'], indent=4)
                         except:
@@ -76,9 +76,8 @@ class Scraper:
 
             if book.url not in self.urls_sent:         
                 html_mail = self.email_html(book)
-                text_json = json.dumps(book.book_json, indent=4)
                 msg.attach(MIMEText(html_mail, 'html'))
-                msg.attach(MIMEText(text_json, 'plain'))
+                msg.attach(MIMEText(book.book_json, 'plain'))
                 server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
                 self.urls_sent.add(book.url)
                 print('Emailed Book: ' + book.url)
@@ -106,8 +105,8 @@ class Scraper:
                 <tr>
                     <th>Book ID</th>
                     <th>Title</th>
-                    <th>Max Price (USD)</th>
-                    <th>Price (USD)</th>
+                    <th>Max Price (GBP)</th>
+                    <th>Price</th>
                     <th>Shipping Information</th>
                     <th>URL</th>
                 </tr>

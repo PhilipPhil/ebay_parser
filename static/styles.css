@@ -1,5 +1,5 @@
 body{
-  background: rgba(0,0,0,0.9);
+  background: #1A1A1D;
   font-family: Impact, Charcoal, sans-serif;
   font-weight: bold;
 }
@@ -12,6 +12,7 @@ form{
   width: 500px;
   height: 200px;
   border: 4px dashed #fff;
+  border-radius: 4px;
 }
 form p{
   width: 100%;
@@ -39,7 +40,7 @@ form #password{
   padding-right: 6px;
   padding-top: 4px;
   padding-bottom: 4px;
-  border-radius: 6px;
+  border-radius: 4px;
   width: 496px;
   outline: none;
   border: none;
@@ -57,6 +58,7 @@ form button{
   border-bottom: 4px solid #117A60;
   transition: all .2s ease;
   outline: none;
+  font-size: 100%;
 }
 form button:hover{
   background: #149174;
@@ -66,7 +68,6 @@ form button:active{
   border:0;
 }
 .center {
-
   background-repeat: no-repeat;
   width: 100%;
   height: auto;

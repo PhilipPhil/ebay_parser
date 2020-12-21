@@ -85,6 +85,8 @@ class Scraper:
             server.quit()
         except:
             print('Email Failed to send: ' + book.url)
+            print('Pausing 600 seconds')
+            time.sleep(600)
 
     def email_html(self, book):
         html_mail = """

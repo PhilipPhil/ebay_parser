@@ -32,7 +32,6 @@ def index():
                         new_search = Search.Search(book_id=row['book_id'], max_price=row['max_price'])
                         db.session.add(new_search)
                 db.session.commit()
-                scraper.reset_urls_sent()
                 return '<h1 style="text-align:center">Upload successful</h1>'
             except:
                 return '<h1 style="text-align:center">There was an issue adding your files</h1>'

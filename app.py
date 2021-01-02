@@ -12,10 +12,10 @@ import Search
 from Scraper import Scraper
 
 scraper = Scraper()
+scraper_thread = threading.Thread(target=scraper.run)
 
 @app.before_first_request
 def thread_start():
-    scraper_thread = threading.Thread(target=scraper.run)
     scraper_thread.start()
 
 @app.route('/', methods=['POST', 'GET'])

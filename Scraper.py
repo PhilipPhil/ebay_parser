@@ -17,6 +17,8 @@ class Scraper:
         self.urls_sent = set()
         self.Token = Token()
         self.banned_sellers = '|'.join(BannedSellers)
+        self.books = []
+        self.time_emailed = time.time()
 
     def check_books(self, book_id, max_price):
         request_url = """https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],\
@@ -26,8 +28,6 @@ class Scraper:
             'Authorization': 'Bearer ' + self.Token.get_token()
         }
         
-        books = []
-
         try:
             response = requests.get(url=request_url, headers=headers)
             response_json = response.json()
@@ -45,7 +45,8 @@ class Scraper:
                         except:
                             shipping_information = 'NOT FOUND'
                         book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
-                        books.append(book)
+                        if book.url not in self.urls_sent:
+                            self.books.append(book)
                     except:
                         print('error with book: ' + str(item))
         except:
@@ -53,38 +54,50 @@ class Scraper:
             print('Pausing 60 seconds')
             time.sleep(60)
 
-        return books
-
     def run(self):
         while True:
             rows = Search.Search.query.all()
             for row in rows:
-                books = self.check_books(row.book_id, row.max_price)
-                for book in books:
-                    self.send_email(book)
+                self.check_books(row.book_id, row.max_price)
+                if time.time() - self.time_emailed > 1*60:
+                    self.send_email()
 
-    def send_email(self, book):
+    def send_email(self):
+
+        if len(self.books) == 0:
+            return
+
         try:
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
             server.login(email_settings['from_mail'], email_settings['password_mail'])
+        except:
+            print('Email connection failed')
+            return
 
-            msg = MIMEMultipart('mixed')
-            msg['Subject'] = 'Book Alert'
-            msg['From'] = email_settings['from_mail']
-            msg['To'] = 'ebayalert123_subscriber'
+        msg = MIMEMultipart('mixed')
+        msg['Subject'] = 'Books found: ' + str(len(self.books))
+        msg['From'] = email_settings['from_mail']
+        msg['To'] = 'ebayalert123_subscriber'
 
+        for book in self.books:
             if book.url not in self.urls_sent:         
                 html_mail = self.email_html(book)
                 msg.attach(MIMEText(html_mail, 'html'))
                 msg.attach(MIMEText(book.book_json, 'plain'))
-                server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
+
+        try:
+            server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
+            
+            for book in self.books:
                 self.urls_sent.add(book.url)
                 print('Emailed Book: ' + book.url)
+            self.books = []
+            self.time_emailed = time.time()
 
             server.quit()
         except:
-            print('Email Failed to send: ' + book.url)
+            print('Email Failed to send')
             print('Pausing 600 seconds')
             time.sleep(600)
 

@@ -20,6 +20,14 @@ class Scraper:
         self.books = []
         self.time_emailed = time.time()
 
+    def run(self):
+        while True:
+            rows = Search.Search.query.all()
+            for row in rows:
+                self.check_books(row.book_id, row.max_price)
+                if time.time() - self.time_emailed > 5*60:
+                    self.send_email()
+
     def check_books(self, book_id, max_price):
         request_url = """https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],\
         priceCurrency:GBP,itemLocationCountry:GB,excludeSellers:{{ {banned_sellers} }}""".format(book_id=book_id, max_price=max_price, banned_sellers=self.banned_sellers)
@@ -54,16 +62,7 @@ class Scraper:
             print('Pausing 60 seconds')
             time.sleep(60)
 
-    def run(self):
-        while True:
-            rows = Search.Search.query.all()
-            for row in rows:
-                self.check_books(row.book_id, row.max_price)
-                if time.time() - self.time_emailed > 5*60:
-                    self.send_email()
-
     def send_email(self):
-
         if len(self.books) == 0:
             return
 
@@ -73,6 +72,8 @@ class Scraper:
             server.login(email_settings['from_mail'], email_settings['password_mail'])
         except:
             print('Email connection failed')
+            print('Pausing 600 seconds')
+            time.sleep(600)
             return
 
         msg = MIMEMultipart('mixed')

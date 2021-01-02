@@ -25,7 +25,7 @@ class Scraper:
             rows = Search.Search.query.all()
             for row in rows:
                 self.check_books(row.book_id, row.max_price)
-                if time.time() - self.time_emailed > 300:
+                if time.time() - self.time_emailed > 180 and len(self.books) > 0:
                     self.send_email()
 
     def check_books(self, book_id, max_price):
@@ -40,12 +40,19 @@ class Scraper:
             response = requests.get(url=request_url, headers=headers)
             response_json = response.json()
             print("request_url: " + request_url)
-            if response_json['total'] > 0:
-                items = response_json['itemSummaries']
-                for item in items:
-                    try:
-                        book_json = json.dumps(item, indent=4)
-                        book_url = item['itemWebUrl']
+        except:
+            print('Out of API calls: ' + str(time.time()))
+            print('Pausing 60 seconds')
+            time.sleep(60)
+            return
+        
+        if response_json['total'] > 0:
+            items = response_json['itemSummaries']
+            for item in items:
+                try:
+                    book_json = json.dumps(item, indent=4)
+                    book_url = item['itemWebUrl']
+                    if book_url not in self.urls_sent:
                         title = item['title']
                         price = json.dumps(item['price'], indent=4)
                         try:
@@ -53,20 +60,13 @@ class Scraper:
                         except:
                             shipping_information = 'NOT FOUND'
                         book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
-                        if book.url not in self.urls_sent:
-                            self.books.append(book)
-                            self.urls_sent.add(book.url)
-                    except:
-                        print('error with book: ' + str(item))
-        except:
-            print('Out of API calls: ' + str(time.time()))
-            print('Pausing 60 seconds')
-            time.sleep(60)
+                        self.urls_sent.add(book.url)
+                        self.books.append(book)
+                except:
+                    print('error with book: ' + str(item))
+
 
     def send_email(self):
-        if len(self.books) == 0:
-            return
-
         try:
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()

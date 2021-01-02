@@ -59,7 +59,7 @@ class Scraper:
             rows = Search.Search.query.all()
             for row in rows:
                 self.check_books(row.book_id, row.max_price)
-                if time.time() - self.time_emailed > 1*60:
+                if time.time() - self.time_emailed > 5*60:
                     self.send_email()
 
     def send_email(self):

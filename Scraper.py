@@ -55,6 +55,7 @@ class Scraper:
                         book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
                         if book.url not in self.urls_sent:
                             self.books.append(book)
+                            self.urls_sent.add(book.url)
                     except:
                         print('error with book: ' + str(item))
         except:
@@ -81,17 +82,15 @@ class Scraper:
         msg['From'] = email_settings['from_mail']
         msg['To'] = 'ebayalert123_subscriber'
 
-        for book in self.books:
-            if book.url not in self.urls_sent:         
-                html_mail = self.email_html(book)
-                msg.attach(MIMEText(html_mail, 'html'))
-                msg.attach(MIMEText(book.book_json, 'plain'))
+        for book in self.books:         
+            html_mail = self.email_html(book)
+            msg.attach(MIMEText(html_mail, 'html'))
+            msg.attach(MIMEText(book.book_json, 'plain'))
 
         try:
             server.sendmail(email_settings['from_mail'], email_settings['to_mail'], msg.as_string())
             
             for book in self.books:
-                self.urls_sent.add(book.url)
                 print('Emailed Book: ' + book.url)
             self.books = []
             self.time_emailed = time.time()

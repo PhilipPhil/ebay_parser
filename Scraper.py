@@ -17,6 +17,8 @@ class Scraper:
         self.urls_sent = set()
         self.Token = Token()
         self.banned_sellers = '|'.join(BannedSellers)
+        self.books = []
+        self.time_emailed = time.time()
 
     def check_books(self, book_id, max_price):
         request_url = """https://api.ebay.com/buy/browse/v1/item_summary/search?q={book_id}&filter=price:[..{max_price}],\
@@ -26,8 +28,6 @@ class Scraper:
             'Authorization': 'Bearer ' + self.Token.get_token()
         }
         
-        books = []
-
         try:
             response = requests.get(url=request_url, headers=headers)
             response_json = response.json()
@@ -45,7 +45,7 @@ class Scraper:
                         except:
                             shipping_information = 'NOT FOUND'
                         book = Book(book_id, max_price, price, shipping_information, title, book_url, book_json)
-                        books.append(book)
+                        self.books.append(book)
                     except:
                         print('error with book: ' + str(item))
         except:
@@ -53,17 +53,17 @@ class Scraper:
             print('Pausing 60 seconds')
             time.sleep(60)
 
-        return books
-
     def run(self):
         while True:
             rows = Search.Search.query.all()
             for row in rows:
-                books = self.check_books(row.book_id, row.max_price)
-                for book in books:
-                    self.send_email(book)
+                self.check_books(row.book_id, row.max_price)
+                if time.time() - self.time_created:
+                    self.send_email(self.books)
+                    self.books = []
+                    self.time_emailed = time.time()
 
-    def send_email(self, book):
+    def send_email(self, books):
         try:
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()

@@ -1,10 +1,12 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_apscheduler import APScheduler
 import pandas as pd
 import threading
 from Utilities import token_settings
 
 app = Flask(__name__)
+scheduler = APScheduler()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
@@ -12,11 +14,14 @@ import Search
 from Scraper import Scraper
 
 scraper = Scraper()
-scraper_thread = threading.Thread(target=scraper.run)
 
-@app.before_first_request
-def thread_start():
-    scraper_thread.start()
+# scraper_thread = threading.Thread(target=scraper.run)
+# @app.before_first_request
+# def thread_start():
+#     scraper_thread.start()
+
+scheduler.add_job(id = 'Book Search', func = scraper.run)
+scheduler.start()
 
 @app.route('/', methods=['POST', 'GET'])
 def index():

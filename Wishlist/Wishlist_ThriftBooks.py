@@ -4,8 +4,8 @@ import time
 import os
 from playsound import playsound
 
-ACCOUNT = {'email' : 'cjoanne614@gmail.com',
-            'password' : 'DsdUWy-C43Gq!%M'}
+ACCOUNT = {'email' : 'youremail@gmail.com',
+            'password' : 'yourpassword'}
 
 class WishList:
 

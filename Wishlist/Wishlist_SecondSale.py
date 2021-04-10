@@ -3,8 +3,8 @@ import pandas as pd
 import time
 from playsound import playsound
 
-ACCOUNT = {'email' : 'cjoanne614@gmail.com',
-            'password' : 'DsdUWy-C43Gq!%M'}
+ACCOUNT = {'email' : 'youremail@gmail.com',
+            'password' : 'yourpassword'}
 
 class WishList:
 
@@ -70,12 +70,14 @@ class WishList:
 
     def add_book(self, book_id):
         buttons = self.browser.find_elements_by_id('wishlist_button')
-        if len(buttons)== 2:
+        print(len(buttons))
+        if len(buttons) == 3:
             wish_book = buttons[1]
-        else:
+        elif len(buttons) == 1:
             wish_book = buttons[0]
         wish_book.click()
         print('Found: ' + book_id)
+
 
 if __name__ == "__main__":
     wish_list = WishList()

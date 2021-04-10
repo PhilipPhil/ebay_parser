@@ -2,8 +2,8 @@ from selenium import webdriver
 import pandas as pd
 import time
 
-ACCOUNT = {'email' : 'cjoanne614@gmail.com',
-            'password' : 'DsdUWy-C43Gq!%M'}
+ACCOUNT = {'email' : 'youremail@gmail.com',
+            'password' : 'yourpassword'}
 
 class WishList:
 

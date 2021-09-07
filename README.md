@@ -1,4 +1,4 @@
-# ebay parcer
+# eBay Parcer
 ### App Screenshot
 ![ebay_alert](ebay_alert.JPG)
 

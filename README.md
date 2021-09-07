@@ -1,7 +1,6 @@
 # ebay parcer
-![ebay_alert](ebay_alert.JPG)
-
 Screen shot of how the web application looks.
+![ebay_alert](ebay_alert.JPG)
 
 ### About
 This is an eBay product price tracking web application. It was designed specifically for books but can be used for other products as well. You upload a CSV file containing product information and max price. There is a background job that will continuously search for your products on eBay. When an item is posted on eBay below the specified max price an email notification will be sent. Your eBay private key is required to upload CSV files.

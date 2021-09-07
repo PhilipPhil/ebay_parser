@@ -1,5 +1,5 @@
 # ebay parcer
-Screenshot of how the web application looks.
+### App Screenshot
 ![ebay_alert](ebay_alert.JPG)
 
 ### About
